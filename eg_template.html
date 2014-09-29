@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8"> 
+<title>tornado_xstatic demo</title>
+<script src="{{ xstatic('jquery', 'jquery.min.js') }}"></script>
+<script>
+// Example from http://api.jquery.com/fadeIn/
+// With the element initially hidden, we can show it slowly:
+$(document).ready(function(){
+    $( "#clickme" ).click(function() {
+        $( "#box" ).fadeIn( "slow", function() {
+            // Animation complete
+        });
+    });
+});
+</script>
+</head>
+<body>
+<div id="clickme">
+Click here
+</div>
+<div id="box" style="width:90px; height:90px; display:none; background-color:magenta;"/>
+</body>
