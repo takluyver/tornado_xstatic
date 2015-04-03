@@ -5,11 +5,11 @@ Utilities for using XStatic in Tornado applications
 packaging static files, especially JS libraries, for Python applications.
 `Tornado <http://www.tornadoweb.org/en/latest/>`_ is a Python web framework.
 
-This integration provides two pieces:
+This integration provides:
 
 - ``XStaticFileHandler`` to serve static files from XStatic packages.
-- ``url_maker`` to build URLs for XStatic files, including the ``?v=...`` tag
-  that Tornado uses for cache invalidation.
+- ``xstatic_ui_method`` ui method to build URLs for XStatic files, including
+  the ``?v=...`` tag  that Tornado uses for cache invalidation.
 
 To use these:
 
@@ -17,19 +17,21 @@ To use these:
 
     import tornado.ioloop
     import tornado.web
-    import tornado_xstatic
-    
+    from tornado_xstatic import XStaticFileHandler, xstatic_ui_method
+
     class MyHandler(tornado.web.RequestHandler):
         def get(self):
-            self.render("mytemplate.html",
-                        xstatic=self.application.settings['xstatic_url'])
+            self.render("mytemplate.html")
+
 
     if __name__ == "__main__":
-        application = tornado.web.Application([
-            (r"/", MyHandler),
-            (r"/xstatic/(.*)", tornado_xstatic.XStaticFileHandler,
-                {"allowed_modules": ["jquery"]}),
-        ], xstatic_url=tornado_xstatic.url_maker("/xstatic/")
+        application = tornado.web.Application(
+            [
+                (r"/", MyHandler),
+                (r"/xstatic/(.*)", XStaticFileHandler,
+                    {"allowed_modules": ["jquery", "bootstrap"]}),
+            ],
+            ui_methods={'xstatic': xstatic_ui_method('/xstatic/')}
         )
         application.listen(8888)
         tornado.ioloop.IOLoop.instance().start()
@@ -40,3 +42,6 @@ XStatic module may be served.
 In your template, you can then do this::
 
     <script src="{{ xstatic('jquery', 'jquery.min.js') }}"></script>
+    <script src="{{ xstatic('bootstrap', 'js/bootstrap.min.js') }}"></script>
+
+    <link href="{{ xstatic('bootstrap', 'css/bootstrap.min.css') }}" rel="stylesheet">
