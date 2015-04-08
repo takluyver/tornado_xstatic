@@ -1,6 +1,7 @@
 import os.path
 import tornado.web
 
+
 class XStaticFileHandler(tornado.web.StaticFileHandler):
     _cached_xstatic_data_dirs = {}
 
@@ -9,13 +10,12 @@ class XStaticFileHandler(tornado.web.StaticFileHandler):
             self.allowed_modules = set(allowed_modules)
         else:
             self.allowed_modules = None
-        
+
         assert 'root' not in kwargs
-        # XXX: Not wild on passing path=/ , because StaticFileHandler's own
+        # NOTE: Not wild on passing path=/ , because StaticFileHandler's own
         # validation will let this serve any file. If this subclass is working
         # correctly, that shouldn't be an issue, but...
         super(XStaticFileHandler, self).initialize(path="/")
-        
 
     def parse_url_path(self, url_path):
         if '/' not in url_path:
@@ -23,8 +23,8 @@ class XStaticFileHandler(tornado.web.StaticFileHandler):
         if self.allowed_modules is not None:
             module_name = url_path.split('/', 1)[0]
             if module_name not in self.allowed_modules:
-                raise tornado.web.HTTPError(403,
-                        'Access to XStatic module %s denied', module_name)
+                raise tornado.web.HTTPError(
+                    403, 'Access to XStatic module %s denied', module_name)
 
         return super(XStaticFileHandler, self).parse_url_path(url_path)
 
@@ -47,10 +47,11 @@ class XStaticFileHandler(tornado.web.StaticFileHandler):
         root = cls._get_xstatic_data_dir(mod_name)
         abs_path = os.path.join(root, path)
         if not abs_path.startswith(root):
-            raise tornado.web.HTTPError(403, 
-                "Request for file outside XStatic package %s: %s", mod_name, path)
+            raise tornado.web.HTTPError(
+                403, "Request for file outside XStatic package %s: %s", mod_name, path)
 
         return abs_path
+
 
 def url_maker(prefix, include_version=True):
     def make_url(package, path):
@@ -61,3 +62,22 @@ def url_maker(prefix, include_version=True):
             version_bit = ""
         return prefix + package + "/" + path + version_bit
     return make_url
+
+
+def xstatic_url(path, include_version=True):
+    """ Returns helper function to make URL to xstatic resources.
+
+    Note: Returned function is ui_method compatible.
+
+    :arg path: Part of URI (eg. /xstatic/) should be
+        the same as one used in handler URI match
+    :arg include_version: Determines whether the generated URL should
+        include the query string containing the version hash of the
+        file corresponding to the give
+    """
+    helper_make_url = url_maker(path, include_version)
+
+    def inner(handler, package, path):
+        return helper_make_url(package, path)
+
+    return inner
