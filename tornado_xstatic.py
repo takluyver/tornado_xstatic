@@ -1,6 +1,8 @@
+"""Utilities for using XStatic in Tornado applications"""
 import os.path
 import tornado.web
 
+__version__ = '0.2'
 
 class XStaticFileHandler(tornado.web.StaticFileHandler):
     _cached_xstatic_data_dirs = {}
