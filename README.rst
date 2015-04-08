@@ -8,7 +8,7 @@ packaging static files, especially JS libraries, for Python applications.
 This integration provides:
 
 - ``XStaticFileHandler`` to serve static files from XStatic packages.
-- ``xstatic_ui_method`` ui method to build URLs for XStatic files, including
+- ``xstatic_url`` ui method to build URLs for XStatic files, including
   the ``?v=...`` tag  that Tornado uses for cache invalidation.
 
 To use these:
@@ -17,7 +17,7 @@ To use these:
 
     import tornado.ioloop
     import tornado.web
-    from tornado_xstatic import XStaticFileHandler, xstatic_ui_method
+    from tornado_xstatic import XStaticFileHandler, xstatic_url
 
     class MyHandler(tornado.web.RequestHandler):
         def get(self):
@@ -31,7 +31,7 @@ To use these:
                 (r"/xstatic/(.*)", XStaticFileHandler,
                     {"allowed_modules": ["jquery", "bootstrap"]}),
             ],
-            ui_methods={'xstatic': xstatic_ui_method('/xstatic/')}
+            ui_methods={'xstatic_url': xstatic_url('/xstatic/')}
         )
         application.listen(8888)
         tornado.ioloop.IOLoop.instance().start()
@@ -41,7 +41,7 @@ XStatic module may be served.
 
 In your template, you can then do this::
 
-    <script src="{{ xstatic('jquery', 'jquery.min.js') }}"></script>
-    <script src="{{ xstatic('bootstrap', 'js/bootstrap.min.js') }}"></script>
+    <script src="{{ xstatic_url('jquery', 'jquery.min.js') }}"></script>
+    <script src="{{ xstatic_url('bootstrap', 'js/bootstrap.min.js') }}"></script>
 
-    <link href="{{ xstatic('bootstrap', 'css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ xstatic_url('bootstrap', 'css/bootstrap.min.css') }}" rel="stylesheet">

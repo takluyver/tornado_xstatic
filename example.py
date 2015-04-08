@@ -1,6 +1,6 @@
 import tornado.ioloop
 import tornado.web
-from tornado_xstatic import XStaticFileHandler, xstatic_ui_method
+from tornado_xstatic import XStaticFileHandler, xstatic_url
 
 
 class MyHandler(tornado.web.RequestHandler):
@@ -14,7 +14,7 @@ if __name__ == "__main__":
             (r"/", MyHandler),
             (r"/xstatic/(.*)", XStaticFileHandler, {"allowed_modules": ["jquery"]}),
         ],
-        ui_methods={'xstatic': xstatic_ui_method('/xstatic/')}
+        ui_methods={'xstatic': xstatic_url('/xstatic/')}
     )
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()

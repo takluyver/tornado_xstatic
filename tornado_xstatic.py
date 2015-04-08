@@ -64,9 +64,18 @@ def url_maker(prefix, include_version=True):
     return make_url
 
 
-def xstatic_ui_method(prefix, include_version=True):
+def xstatic_url(path, include_version=True):
+    """ Returns helper function to make URL to xstatic resources.
 
-    helper_make_url = url_maker(prefix, include_version)
+    Note: Returned function is ui_method compatible.
+
+    :arg path: Part of URI (eg. /xstatic/) should be
+        the same as one used in handler URI match
+    :arg include_version: Determines whether the generated URL should
+        include the query string containing the version hash of the
+        file corresponding to the give
+    """
+    helper_make_url = url_maker(path, include_version)
 
     def inner(handler, package, path):
         return helper_make_url(package, path)
