@@ -18,7 +18,7 @@ class XStaticFileHandler(tornado.web.StaticFileHandler):
         # like the pip packages are install in C:/ and the code you are
         # running is in another partition.
         # see also https://github.com/tornadoweb/tornado/blob/v6.1.0/tornado/web.py#L2768
-        # So change this to the root driver location of 'xstatic' package
+        # So change this to the root drive location of 'xstatic' package
         # for windows platform.
         from pathlib import Path
         from sys import platform
