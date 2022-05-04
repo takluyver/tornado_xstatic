@@ -17,8 +17,13 @@ class XStaticFileHandler(tornado.web.StaticFileHandler):
         # NOTE: Passing path=/ will not work on some conditions on windows
         # like the pip packages are install in C:/ and the code you are
         # running is in another partition.
-        # So change this to the location of 'xstatic/pkg' package.
-        super(XStaticFileHandler, self).initialize(path=os.path.join(os.path.dirname(__file__), 'xstatic/pkg'))
+        # see also https://github.com/tornadoweb/tornado/blob/v6.1.0/tornado/web.py#L2768
+        # So change this to the root driver location of 'xstatic' package
+        # for windows platform.
+        from pathlib import Path
+        from sys import platform
+        path = '/' if platform != 'win32' else Path(__import__('xstatic').__path__[0]).drive
+        super(XStaticFileHandler, self).initialize(path=path)
 
     def parse_url_path(self, url_path):
         if '/' not in url_path:
