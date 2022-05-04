@@ -14,10 +14,16 @@ class XStaticFileHandler(tornado.web.StaticFileHandler):
             self.allowed_modules = None
 
         assert 'root' not in kwargs
-        # NOTE: Not wild on passing path=/ , because StaticFileHandler's own
-        # validation will let this serve any file. If this subclass is working
-        # correctly, that shouldn't be an issue, but...
-        super(XStaticFileHandler, self).initialize(path="/")
+        # NOTE: Passing path=/ will not work on some conditions on windows
+        # like the pip packages are install in C:/ and the code you are
+        # running is in another partition.
+        # see also https://github.com/tornadoweb/tornado/blob/v6.1.0/tornado/web.py#L2768
+        # So change this to the root drive location of 'xstatic' package
+        # for windows platform.
+        from pathlib import Path
+        from sys import platform
+        path = '/' if platform != 'win32' else Path(__import__('xstatic').__path__[0]).drive
+        super(XStaticFileHandler, self).initialize(path=path)
 
     def parse_url_path(self, url_path):
         if '/' not in url_path:
