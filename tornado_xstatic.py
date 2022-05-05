@@ -2,7 +2,7 @@
 import os.path
 import tornado.web
 
-__version__ = '0.2'
+__version__ = '0.3'
 
 class XStaticFileHandler(tornado.web.StaticFileHandler):
     _cached_xstatic_data_dirs = {}
