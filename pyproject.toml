@@ -1,0 +1,21 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "tornado_xstatic"
+authors = [{name = "Thomas Kluyver", email = "thomas@kluyver.me.uk"}]
+readme = "README.rst"
+requires-python = ">= 3.4"  # Rough guess - 3.4 added pathlib
+dependencies = ["tornado"]
+classifiers = [
+    "License :: OSI Approved :: BSD License",
+    "Environment :: Web Environment",   
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 3",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+dynamic = ["version", "description"]
+
+[project.urls]
+Home = "https://github.com/takluyver/tornado_xstatic"
